@@ -8,6 +8,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<title>El Rincón Del Dev</title>
 </svelte:head>
 
 <div class="min-h-screen flex flex-col">
