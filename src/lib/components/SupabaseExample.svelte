@@ -3,7 +3,6 @@
 	import { createDbService } from '$lib/db';
 	import type { DbResult } from '$lib/db';
 
-	// Define el tipo de tu tabla (ajusta esto según tu base de datos)
 	interface Item {
 		id: number;
 		name: string;
@@ -11,26 +10,21 @@
 		created_at: string;
 	}
 
-	// Crea el servicio de base de datos (cambia 'items' por el nombre de tu tabla)
 	const itemsDb = createDbService<Item>('items');
 
-	// Estado del componente
 	let items = $state<Item[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 	let successMessage = $state<string | null>(null);
 
-	// Formulario para crear/editar
 	let formName = $state('');
 	let formDescription = $state('');
 	let editingId = $state<number | null>(null);
 
-	// Cargar datos al montar
 	onMount(async () => {
 		await loadItems();
 	});
 
-	// Función para cargar items
 	async function loadItems() {
 		loading = true;
 		error = null;
@@ -49,7 +43,6 @@
 		loading = false;
 	}
 
-	// Crear o actualizar item
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		error = null;
@@ -61,7 +54,6 @@
 		}
 
 		if (editingId !== null) {
-			// UPDATE
 			const result = await itemsDb.update(editingId, {
 				name: formName,
 				description: formDescription || undefined
@@ -75,7 +67,6 @@
 				resetForm();
 			}
 		} else {
-			// CREATE
 			const result = await itemsDb.create({
 				name: formName,
 				description: formDescription || undefined
@@ -91,7 +82,6 @@
 		}
 	}
 
-	// Editar item
 	function handleEdit(item: Item) {
 		editingId = item.id;
 		formName = item.name;
@@ -100,7 +90,6 @@
 		successMessage = null;
 	}
 
-	// Eliminar item
 	async function handleDelete(id: number) {
 		if (!confirm('¿Estás seguro de que quieres eliminar este item?')) {
 			return;
@@ -119,14 +108,12 @@
 		}
 	}
 
-	// Resetear formulario
 	function resetForm() {
 		formName = '';
 		formDescription = '';
 		editingId = null;
 	}
 
-	// Formatear fecha
 	function formatDate(dateString: string) {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('es-ES', {
@@ -142,7 +129,6 @@
 <div class="container">
 	<h1>Ejemplo de CRUD con Supabase</h1>
 
-	<!-- Mensajes -->
 	{#if error}
 		<div class="alert alert-error">
 			❌ {error}
@@ -155,19 +141,12 @@
 		</div>
 	{/if}
 
-	<!-- Formulario -->
 	<form onsubmit={handleSubmit} class="form">
 		<h2>{editingId !== null ? 'Editar Item' : 'Crear Nuevo Item'}</h2>
 
 		<div class="form-group">
 			<label for="name">Nombre *</label>
-			<input
-				type="text"
-				id="name"
-				bind:value={formName}
-				placeholder="Nombre del item"
-				required
-			/>
+			<input type="text" id="name" bind:value={formName} placeholder="Nombre del item" required />
 		</div>
 
 		<div class="form-group">
@@ -186,14 +165,11 @@
 			</button>
 
 			{#if editingId !== null}
-				<button type="button" onclick={resetForm} class="btn btn-secondary">
-					Cancelar
-				</button>
+				<button type="button" onclick={resetForm} class="btn btn-secondary"> Cancelar </button>
 			{/if}
 		</div>
 	</form>
 
-	<!-- Lista de items -->
 	<div class="items-section">
 		<div class="section-header">
 			<h2>Items ({items.length})</h2>
@@ -258,7 +234,6 @@
 		color: #2a2a2a;
 	}
 
-	/* Alertas */
 	.alert {
 		padding: 1rem;
 		border-radius: 0.5rem;
@@ -278,7 +253,6 @@
 		border: 1px solid #cfc;
 	}
 
-	/* Formulario */
 	.form {
 		background: white;
 		padding: 1.5rem;
@@ -321,7 +295,6 @@
 		margin-top: 1.5rem;
 	}
 
-	/* Botones */
 	.btn {
 		padding: 0.75rem 1.5rem;
 		border: none;
@@ -368,7 +341,6 @@
 		cursor: not-allowed;
 	}
 
-	/* Sección de items */
 	.items-section {
 		background: white;
 		padding: 1.5rem;
@@ -401,7 +373,6 @@
 		margin-top: 0.5rem;
 	}
 
-	/* Grid de items */
 	.items-grid {
 		display: grid;
 		gap: 1rem;
@@ -449,4 +420,3 @@
 		gap: 0.5rem;
 	}
 </style>
-

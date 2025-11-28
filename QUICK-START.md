@@ -53,6 +53,7 @@ pnpm dev
 ## 🎯 Lo que puedes hacer ahora
 
 ### En el Dashboard (`/admin-dashboard`):
+
 - ✅ **Crear** recursos con nombre, URL, categoría y descripción
 - ✅ **Editar** recursos existentes
 - ✅ **Eliminar** recursos
@@ -63,6 +64,7 @@ pnpm dev
 - ✅ **Ver estadísticas** en tiempo real
 
 ### En la Página Principal (`/`):
+
 - 📋 Ver todos los recursos activos
 - 🔍 Filtrar por categoría
 - 🔗 Acceder directamente a los recursos
@@ -119,6 +121,7 @@ pnpm dev
 ## 🐛 Problemas Comunes
 
 **No se cargan los recursos**
+
 ```bash
 # Verifica que la tabla existe en Supabase
 # Verifica las políticas RLS
@@ -126,6 +129,7 @@ pnpm dev
 ```
 
 **Error al crear/editar**
+
 ```bash
 # Asegúrate de completar todos los campos requeridos
 # Verifica que la URL sea válida
@@ -135,9 +139,9 @@ pnpm dev
 ## 🎉 ¡Listo!
 
 Tu Admin Dashboard está completamente funcional. Solo necesitas:
+
 1. ✅ Ejecutar el SQL en Supabase
 2. ✅ Verificar el `.env`
 3. ✅ Iniciar con `pnpm dev`
 
 **Empieza en**: http://localhost:5173/admin-dashboard 🚀
-

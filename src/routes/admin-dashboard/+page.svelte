@@ -3,7 +3,6 @@
 	import { resourcesApi } from '$lib/services/resources';
 	import type { Resource } from '$lib/types/database.types';
 
-	// Shadcn UI Components
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
@@ -12,7 +11,6 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import { Badge } from '$lib/components/ui/badge';
 
-	// Lucide Icons
 	import {
 		Plus,
 		RefreshCw,
@@ -26,59 +24,68 @@
 		Clock,
 		CheckCircle2,
 		XCircle,
-		ExternalLink
+		ExternalLink,
+		LogOut
 	} from '@lucide/svelte';
 
-	// Estado del componente
 	let resources = $state<Resource[]>([]);
 	let pendingResources = $state<Resource[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 	let successMessage = $state<string | null>(null);
 
-	// Estado del formulario
 	let showForm = $state(false);
 	let editingResource = $state<Resource | null>(null);
 	let formData = $state({
 		name: '',
 		description: '',
 		url: '',
-		category: '',
+		category: [] as string[],
 		isActive: true
 	});
 
-	// Filtros y búsqueda
 	let searchQuery = $state('');
 	let selectedCategory = $state<string>('all');
 	let showPendingOnly = $state(false);
 
-	// Categorías disponibles
-	const categories = ['Frontend', 'Backend', 'Database', 'DevOps', 'Tools'];
+	const categories = [
+		'Full Stack',
+		'Backend',
+		'Practice',
+		'Roadmaps',
+		'Typescript',
+		'Programming',
+		'Logic',
+		'Git',
+		'CSS',
+		'Computer Science',
+		'Design Patterns',
+		'JavaScript',
+		'SQL',
+		'System Design',
+		'Books'
+	];
 
-	// Recursos filtrados
 	let filteredResources = $derived(() => {
 		let result = showPendingOnly ? pendingResources : resources;
 
-		// Filtrar por búsqueda
 		if (searchQuery.trim()) {
 			const query = searchQuery.toLowerCase();
 			result = result.filter(
 				(r) =>
 					r.name.toLowerCase().includes(query) ||
 					r.description.toLowerCase().includes(query) ||
-					r.category.toLowerCase().includes(query)
+					r.category.some((cat) => cat.toLowerCase().includes(query))
 			);
 		}
 
-		// Filtrar por categoría
 		if (selectedCategory !== 'all') {
-			result = result.filter((r) => r.category === selectedCategory);
+			result = result.filter((r) => r.category.includes(selectedCategory));
 		}
 
 		return result;
 	});
 
-	// Cargar datos
 	onMount(async () => {
 		await loadData();
 	});
@@ -105,14 +112,13 @@
 		}
 	}
 
-	// Crear o actualizar recurso
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		error = null;
 		successMessage = null;
 
-		if (!formData.name.trim() || !formData.url.trim() || !formData.category.trim()) {
-			error = 'Por favor completa todos los campos requeridos';
+		if (!formData.name.trim() || !formData.url.trim() || formData.category.length === 0) {
+			error = 'Por favor completa todos los campos requeridos (incluyendo al menos una categoría)';
 			return;
 		}
 
@@ -157,7 +163,6 @@
 		}
 	}
 
-	// Aprobar recurso
 	async function handleApprove(resource: Resource) {
 		error = null;
 		successMessage = null;
@@ -178,7 +183,6 @@
 		}
 	}
 
-	// Rechazar recurso
 	async function handleReject(resource: Resource) {
 		error = null;
 		successMessage = null;
@@ -199,7 +203,6 @@
 		}
 	}
 
-	// Eliminar recurso
 	async function handleDelete(resource: Resource) {
 		if (!confirm(`¿Estás seguro de eliminar "${resource.name}"?`)) return;
 
@@ -220,7 +223,6 @@
 		}
 	}
 
-	// Editar recurso
 	function handleEdit(resource: Resource) {
 		editingResource = resource;
 		formData = {
@@ -239,20 +241,26 @@
 		}, 100);
 	}
 
-	// Resetear formulario
 	function resetForm() {
 		formData = {
 			name: '',
 			description: '',
 			url: '',
-			category: '',
+			category: [],
 			isActive: true
 		};
 		editingResource = null;
 		showForm = false;
 	}
 
-	// Formatear fecha
+	function toggleCategory(cat: string) {
+		if (formData.category.includes(cat)) {
+			formData.category = formData.category.filter((c) => c !== cat);
+		} else {
+			formData.category = [...formData.category, cat];
+		}
+	}
+
 	function formatDate(dateString: string) {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('es-ES', {
@@ -264,7 +272,6 @@
 		});
 	}
 
-	// Auto-cerrar mensajes
 	$effect(() => {
 		if (successMessage) {
 			const timeout = setTimeout(() => {
@@ -273,22 +280,39 @@
 			return () => clearTimeout(timeout);
 		}
 	});
+
+	async function handleLogout() {
+		try {
+			await fetch('/api/admin-logout', { method: 'POST' });
+			window.location.href = '/';
+		} catch (err) {
+			console.error('Error al cerrar sesión:', err);
+		}
+	}
 </script>
 
 <div class="min-h-screen bg-linear-to-br from-background to-muted/20 p-4 md:p-8">
 	<div class="container mx-auto max-w-7xl space-y-8">
-		<!-- Header -->
-		<div class="text-center space-y-4">
-			<h1 class="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center gap-3">
-				<BarChart3 class="h-10 w-10 text-primary" />
-				Admin Dashboard
-			</h1>
-			<p class="text-lg text-muted-foreground">
-				Gestiona todos los recursos de desarrollo
-			</p>
+		<div class="space-y-4">
+			<div class="flex items-center justify-between">
+				<div class="flex-1 text-center">
+					<h1
+						class="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center gap-3"
+					>
+						<BarChart3 class="h-10 w-10 text-primary" />
+						Admin Dashboard
+					</h1>
+					<p class="text-lg text-muted-foreground mt-2">
+						Gestiona todos los recursos de desarrollo
+					</p>
+				</div>
+				<Button variant="ghost" size="sm" onclick={handleLogout} class="absolute top-4 right-4">
+					<LogOut class="h-4 w-4 mr-2" />
+					Salir
+				</Button>
+			</div>
 		</div>
 
-		<!-- Alerts -->
 		{#if error}
 			<Alert.Root variant="destructive" class="animate-in slide-in-from-top duration-300">
 				<XCircle class="h-4 w-4" />
@@ -303,7 +327,9 @@
 		{/if}
 
 		{#if successMessage}
-			<Alert.Root class="animate-in slide-in-from-top duration-300 border-green-200 bg-green-50 text-green-900">
+			<Alert.Root
+				class="animate-in slide-in-from-top duration-300 border-green-200 bg-green-50 text-green-900"
+			>
 				<CheckCircle2 class="h-4 w-4 text-green-600" />
 				<Alert.Title>Éxito</Alert.Title>
 				<Alert.Description class="flex items-center justify-between">
@@ -315,7 +341,6 @@
 			</Alert.Root>
 		{/if}
 
-		<!-- Stats -->
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 			<Card.Root class="bg-linear-to-br from-blue-500 to-blue-600 text-white border-0">
 				<Card.Header class="pb-2">
@@ -334,12 +359,13 @@
 			<Card.Root class="bg-linear-to-br from-purple-500 to-purple-600 text-white border-0">
 				<Card.Header class="pb-2">
 					<Card.Description class="text-purple-100">Total de Recursos</Card.Description>
-					<Card.Title class="text-4xl font-bold">{resources.length + pendingResources.length}</Card.Title>
+					<Card.Title class="text-4xl font-bold"
+						>{resources.length + pendingResources.length}</Card.Title
+					>
 				</Card.Header>
 			</Card.Root>
 		</div>
 
-		<!-- Controls -->
 		<div class="flex flex-col sm:flex-row justify-between gap-4">
 			<div class="flex flex-wrap gap-3">
 				<Button onclick={() => (showForm = !showForm)} size="lg">
@@ -371,7 +397,6 @@
 			</Button>
 		</div>
 
-		<!-- Form -->
 		{#if showForm}
 			<Card.Root id="form-section" class="animate-in slide-in-from-top duration-300">
 				<Card.Header>
@@ -387,31 +412,38 @@
 				</Card.Header>
 				<Card.Content>
 					<form onsubmit={handleSubmit} class="space-y-6">
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div class="space-y-2">
-								<Label for="name">Nombre *</Label>
-								<Input
-									id="name"
-									bind:value={formData.name}
-									placeholder="Ej: React Documentation"
-									required
-								/>
-							</div>
+						<div class="space-y-2">
+							<Label for="name">Nombre *</Label>
+							<Input
+								id="name"
+								bind:value={formData.name}
+								placeholder="Ej: React Documentation"
+								required
+							/>
+						</div>
 
-							<div class="space-y-2">
-								<Label for="category">Categoría *</Label>
-								<select
-									id="category"
-									bind:value={formData.category}
-									required
-									class="flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-								>
-									<option value="">Seleccionar categoría</option>
-									{#each categories as cat}
-										<option value={cat}>{cat}</option>
-									{/each}
-								</select>
+						<div class="space-y-2">
+							<Label>Categorías * (Selecciona al menos una)</Label>
+							<div class="flex flex-wrap gap-2 p-3 border rounded-md bg-background min-h-[100px]">
+								{#each categories as cat}
+									<button
+										type="button"
+										onclick={() => toggleCategory(cat)}
+										class="px-3 py-1 rounded-full text-sm transition-all {formData.category.includes(
+											cat
+										)
+											? 'bg-primary text-primary-foreground'
+											: 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}"
+									>
+										{cat}
+									</button>
+								{/each}
 							</div>
+							{#if formData.category.length > 0}
+								<p class="text-xs text-muted-foreground">
+									Seleccionadas: {formData.category.join(', ')}
+								</p>
+							{/if}
 						</div>
 
 						<div class="space-y-2">
@@ -442,9 +474,7 @@
 								bind:checked={formData.isActive}
 								class="h-4 w-4 rounded border-gray-300"
 							/>
-							<Label for="isActive" class="cursor-pointer">
-								Activar recurso inmediatamente
-							</Label>
+							<Label for="isActive" class="cursor-pointer">Activar recurso inmediatamente</Label>
 						</div>
 
 						<div class="flex gap-3">
@@ -467,17 +497,12 @@
 			</Card.Root>
 		{/if}
 
-		<!-- Filters -->
 		<Card.Root>
 			<Card.Content class="pt-6">
 				<div class="flex flex-col md:flex-row gap-4">
 					<div class="relative flex-1">
 						<Search class="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-						<Input
-							bind:value={searchQuery}
-							placeholder="Buscar recursos..."
-							class="pl-10"
-						/>
+						<Input bind:value={searchQuery} placeholder="Buscar recursos..." class="pl-10" />
 					</div>
 
 					<select
@@ -493,7 +518,6 @@
 			</Card.Content>
 		</Card.Root>
 
-		<!-- Resources List -->
 		{#if loading}
 			<div class="flex flex-col items-center justify-center py-20 space-y-4">
 				<Loader2 class="h-12 w-12 animate-spin text-primary" />
@@ -516,23 +540,34 @@
 		{:else}
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{#each filteredResources() as resource (resource.id)}
-					<Card.Root class="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 {!resource.isActive ? 'border-orange-300 bg-orange-50/50' : ''}">
+					<Card.Root
+						class="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 {!resource.isActive
+							? 'border-orange-300 bg-orange-50/50'
+							: ''}"
+					>
 						<Card.Header>
-							<div class="flex justify-between items-start gap-3 mb-2">
-								<Card.Title class="text-xl leading-tight">{resource.name}</Card.Title>
-								<div class="flex flex-col gap-2">
-									<Badge variant="secondary">{resource.category}</Badge>
+							<div class="mb-2">
+								<div class="flex justify-between items-start gap-3 mb-2">
+									<Card.Title class="text-xl leading-tight">{resource.name}</Card.Title>
 									{#if resource.isActive}
-										<Badge class="bg-green-100 text-green-800 hover:bg-green-100">
+										<Badge class="bg-green-100 text-green-800 hover:bg-green-100 shrink-0">
 											<Check class="h-3 w-3 mr-1" />
 											Activo
 										</Badge>
 									{:else}
-										<Badge variant="outline" class="bg-orange-100 text-orange-800 border-orange-300">
+										<Badge
+											variant="outline"
+											class="bg-orange-100 text-orange-800 border-orange-300 shrink-0"
+										>
 											<Clock class="h-3 w-3 mr-1" />
 											Pendiente
 										</Badge>
 									{/if}
+								</div>
+								<div class="flex flex-wrap gap-1 mb-2">
+									{#each resource.category as cat}
+										<Badge variant="secondary" class="text-xs">{cat}</Badge>
+									{/each}
 								</div>
 							</div>
 

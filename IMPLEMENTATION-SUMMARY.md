@@ -7,36 +7,43 @@
 Un dashboard completo para gestionar recursos con las siguientes características:
 
 #### 📊 **Estadísticas en Tiempo Real**
+
 - Contador de recursos activos
 - Contador de recursos pendientes de aprobación
 - Total de recursos en el sistema
 
 #### ➕ **Crear Recursos**
+
 - Formulario intuitivo con validación
 - Campos: nombre, URL, categoría, descripción, estado
 - Opción de activar inmediatamente o dejar pendiente
 
 #### ✏️ **Editar Recursos**
+
 - Edición in-place con formulario pre-llenado
 - Actualización en tiempo real
 - Cambio de estado (activo/pendiente)
 
 #### ✅ **Aprobar/Desactivar Recursos**
+
 - Botón de aprobación rápida para recursos pendientes
 - Opción de desactivar recursos activos
 - Cambios reflejados instantáneamente
 
 #### 🗑️ **Eliminar Recursos**
+
 - Confirmación antes de eliminar
 - Eliminación permanente de la base de datos
 
 #### 🔍 **Búsqueda y Filtros Avanzados**
+
 - Búsqueda en tiempo real por nombre, descripción o categoría
 - Filtro por categoría específica
 - Vista de solo recursos pendientes
 - Combinación de múltiples filtros
 
 #### 🎨 **Interfaz Moderna y Responsiva**
+
 - Design system consistente
 - Animaciones suaves
 - Totalmente responsive (mobile-first)
@@ -46,37 +53,46 @@ Un dashboard completo para gestionar recursos con las siguientes característica
 ### 📁 Archivos Creados
 
 #### 1. **Core del Dashboard**
+
 ```
 src/routes/admin-dashboard/+page.svelte
 ```
+
 - Componente principal del dashboard
 - ~700 líneas de código
 - Svelte 5 con runes ($state, $derived, $effect)
 
 #### 2. **Servicio de Recursos**
+
 ```
 src/lib/services/resources.ts
 ```
+
 - API extendida para gestionar recursos
 - Métodos específicos: getActive(), getPending(), approve(), reject()
 - Integración con createDbService
 
 #### 3. **Tipos de Base de Datos**
+
 ```
 src/lib/types/database.types.ts
 ```
+
 - Interface Resource con todos los campos
 - Tipos helper: CreateResource, UpdateResource
 
 #### 4. **Componente Público de Recursos**
+
 ```
 src/lib/components/ResourcesList.svelte
 ```
+
 - Componente reutilizable para mostrar recursos
 - Props: category, limit, showCategory
 - Para usar en páginas públicas
 
 #### 5. **Documentación**
+
 ```
 ADMIN-DASHBOARD.md - Guía completa de uso
 IMPLEMENTATION-SUMMARY.md - Este archivo
@@ -99,6 +115,7 @@ CREATE TABLE resources (
 ```
 
 **Índices creados:**
+
 - idx_resources_category
 - idx_resources_isActive
 - idx_resources_created_at
@@ -155,7 +172,7 @@ http://localhost:5173/admin-dashboard
 
 ```svelte
 <script>
-  import ResourcesList from '$lib/components/ResourcesList.svelte';
+	import ResourcesList from '$lib/components/ResourcesList.svelte';
 </script>
 
 <!-- Todos los recursos activos -->
@@ -197,7 +214,7 @@ Edita el archivo CSS en `admin-dashboard/+page.svelte`:
 
 ```css
 .btn-primary {
-  background-color: #3b82f6; /* Cambia este color */
+	background-color: #3b82f6; /* Cambia este color */
 }
 ```
 
@@ -207,9 +224,9 @@ Edita el array `categories` en `admin-dashboard/+page.svelte`:
 
 ```typescript
 const categories = [
-  'Frontend', 
-  'Backend', 
-  'TuCategoria' // Agregar aquí
+	'Frontend',
+	'Backend',
+	'TuCategoria' // Agregar aquí
 ];
 ```
 
@@ -222,6 +239,7 @@ Edita la interfaz `Resource` en `types/database.types.ts` y actualiza el formula
 ### Para Desarrollo
 
 El script SQL incluye políticas RLS básicas que permiten:
+
 - Lectura pública de recursos activos
 - Lectura completa para usuarios autenticados
 - Creación para usuarios autenticados
@@ -231,21 +249,25 @@ El script SQL incluye políticas RLS básicas que permiten:
 Debes implementar:
 
 1. **Autenticación**
+
 ```typescript
 // Usar Supabase Auth
 import { supabase } from '$lib/supabase';
 
 // En +layout.server.ts
 export const load = async ({ locals }) => {
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  if (!session) {
-    throw redirect(303, '/login');
-  }
+	const {
+		data: { session }
+	} = await supabase.auth.getSession();
+
+	if (!session) {
+		throw redirect(303, '/login');
+	}
 };
 ```
 
 2. **Control de Acceso Basado en Roles**
+
 ```sql
 -- Crear tabla de perfiles
 CREATE TABLE profiles (
@@ -269,6 +291,7 @@ USING (
 ```
 
 3. **Rate Limiting**
+
 ```typescript
 // Implementar rate limiting en endpoints
 ```
@@ -276,18 +299,23 @@ USING (
 ## 🐛 Troubleshooting
 
 ### Error: "Table 'resources' does not exist"
+
 **Solución**: Ejecuta `supabase-setup.sql` en Supabase SQL Editor
 
 ### Error: "Row Level Security policy violation"
+
 **Solución**: Verifica políticas RLS en Supabase Dashboard
 
 ### No se cargan los recursos
-**Solución**: 
+
+**Solución**:
+
 1. Verifica las variables de entorno
 2. Revisa la consola del navegador
 3. Verifica políticas RLS
 
 ### Formulario no se envía
+
 **Solución**: Verifica que todos los campos requeridos estén completos
 
 ## 📊 Métricas de Rendimiento
@@ -336,4 +364,3 @@ El Admin Dashboard está completamente funcional y listo para usar. Solo necesit
 4. ✅ Acceder a `/admin-dashboard`
 
 ¡Todo listo para administrar tus recursos de desarrollo! 🚀
-

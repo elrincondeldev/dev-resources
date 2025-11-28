@@ -3,7 +3,6 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import type { Resource, CreateResource } from '../src/lib/types/database.types';
 
-// Configurar Supabase
 const supabaseUrl = process.env.PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.PUBLIC_SUPABASE_ANON_KEY;
 
@@ -20,24 +19,37 @@ interface ImportOptions {
 	skipDuplicates?: boolean;
 }
 
+interface JsonResource {
+	id: string;
+	name: string;
+	description: string;
+	url: string;
+	category: string | string[];
+	isActive: boolean;
+	created_at?: string;
+}
+
 async function importResources(filePath: string, options: ImportOptions = {}) {
 	const { clearExisting = false, skipDuplicates = true } = options;
 
 	console.log('📦 Iniciando importación de recursos...\n');
 
 	try {
-		// Leer el archivo JSON
 		const fullPath = resolve(process.cwd(), filePath);
 		console.log(`📄 Leyendo archivo: ${fullPath}`);
 		const fileContent = readFileSync(fullPath, 'utf-8');
-		const resources: Resource[] = JSON.parse(fileContent);
+		const jsonResources: JsonResource[] = JSON.parse(fileContent);
+
+		const resources: Resource[] = jsonResources.map((r) => ({
+			...r,
+			category: Array.isArray(r.category) ? r.category : [r.category]
+		}));
 
 		console.log(`✅ Archivo leído correctamente: ${resources.length} recursos encontrados\n`);
 
-		// Limpiar tabla si se solicita
 		if (clearExisting) {
 			console.log('🗑️  Eliminando recursos existentes...');
-			const { error: deleteError } = await supabase.from('resources').delete().neq('id', '');
+			const { error: deleteError } = await supabase.from('resources').delete().gte('id', '0');
 
 			if (deleteError) {
 				console.error('❌ Error al limpiar la tabla:', deleteError.message);
@@ -46,22 +58,19 @@ async function importResources(filePath: string, options: ImportOptions = {}) {
 			console.log('✅ Tabla limpiada correctamente\n');
 		}
 
-		// Importar recursos
 		let imported = 0;
 		let skipped = 0;
 		let errors = 0;
 
 		for (const resource of resources) {
-			// Preparar el recurso (quitar created_at si está presente, Supabase lo genera)
-			const { created_at, ...resourceData } = resource;
+			const { id, created_at, ...resourceData } = resource;
 
 			try {
 				if (skipDuplicates) {
-					// Verificar si ya existe un recurso con ese ID o URL
 					const { data: existing } = await supabase
 						.from('resources')
 						.select('id')
-						.or(`id.eq.${resource.id},url.eq.${resource.url}`)
+						.eq('url', resource.url)
 						.single();
 
 					if (existing) {
@@ -71,7 +80,6 @@ async function importResources(filePath: string, options: ImportOptions = {}) {
 					}
 				}
 
-				// Insertar el recurso
 				const { error } = await supabase.from('resources').insert(resourceData);
 
 				if (error) {
@@ -87,7 +95,6 @@ async function importResources(filePath: string, options: ImportOptions = {}) {
 			}
 		}
 
-		// Resumen
 		console.log('\n📊 Resumen de importación:');
 		console.log(`   ✅ Importados: ${imported}`);
 		console.log(`   ⏭️  Saltados: ${skipped}`);
@@ -103,13 +110,11 @@ async function importResources(filePath: string, options: ImportOptions = {}) {
 	}
 }
 
-// Procesar argumentos de línea de comandos
 const args = process.argv.slice(2);
 const filePath = args[0] || 'learning-resources.json';
 const clearExisting = args.includes('--clear');
 const allowDuplicates = args.includes('--allow-duplicates');
 
-// Mostrar ayuda
 if (args.includes('--help') || args.includes('-h')) {
 	console.log(`
 📦 Script de importación de recursos a Supabase
@@ -134,9 +139,7 @@ Ejemplos:
 	process.exit(0);
 }
 
-// Ejecutar importación
 importResources(filePath, {
 	clearExisting,
 	skipDuplicates: !allowDuplicates
 });
-

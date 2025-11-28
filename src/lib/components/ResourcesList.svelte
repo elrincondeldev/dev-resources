@@ -18,7 +18,6 @@
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
-	// Cargar recursos cuando cambie la categoría
 	$effect(() => {
 		loadResources();
 	});
@@ -40,7 +39,7 @@
 				throw new Error(result.error.message);
 			}
 
-			resources = limit ? (result.data ?? []).slice(0, limit) : result.data ?? [];
+			resources = limit ? (result.data ?? []).slice(0, limit) : (result.data ?? []);
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Error cargando recursos';
 		} finally {
@@ -56,7 +55,9 @@
 			<p>Cargando recursos...</p>
 		</div>
 	{:else if error}
-		<div class="flex flex-col items-center justify-center gap-4 py-8 px-4 bg-destructive/10 rounded-lg border border-destructive/20">
+		<div
+			class="flex flex-col items-center justify-center gap-4 py-8 px-4 bg-destructive/10 rounded-lg border border-destructive/20"
+		>
 			<p class="text-destructive font-semibold">❌ {error}</p>
 			<Button onclick={loadResources} variant="destructive">Reintentar</Button>
 		</div>
@@ -68,16 +69,20 @@
 	{:else}
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 			{#each resources as resource (resource.id)}
-				<Card.Root class="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between">
+				<Card.Root
+					class="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
+				>
 					<Card.Header>
-						<div class="flex justify-between items-start gap-4 mb-2">
-							<Card.Title class="text-xl leading-tight">{resource.name}</Card.Title>
-							{#if showCategory}
-								<Badge variant="secondary" class="shrink-0">
-									{resource.category}
-								</Badge>
-							{/if}
-						</div>
+						<Card.Title class="text-xl leading-tight mb-2">{resource.name}</Card.Title>
+						{#if showCategory && resource.category.length > 0}
+							<div class="flex flex-wrap gap-1 mb-2">
+								{#each resource.category as cat}
+									<Badge variant="secondary" class="text-xs">
+										{cat}
+									</Badge>
+								{/each}
+							</div>
+						{/if}
 						{#if resource.description}
 							<Card.Description class="line-clamp-3">
 								{resource.description}

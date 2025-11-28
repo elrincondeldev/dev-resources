@@ -15,10 +15,10 @@ Edita `src/lib/types/database.types.ts`:
 
 ```typescript
 export interface MiTabla {
-  id: number;
-  nombre: string;
-  descripcion?: string;
-  created_at: string;
+	id: number;
+	nombre: string;
+	descripcion?: string;
+	created_at: string;
 }
 ```
 
@@ -35,35 +35,35 @@ const miTablaDb = createDbService<MiTabla>('mi_tabla');
 
 ```svelte
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { createDbService } from '$lib/db';
-  
-  const db = createDbService('mi_tabla');
-  let items = $state([]);
-  
-  onMount(async () => {
-    const { data } = await db.getAll();
-    items = data ?? [];
-  });
-  
-  async function crear(nombre: string) {
-    const { data } = await db.create({ nombre });
-    if (data) items = [...items, data];
-  }
-  
-  async function eliminar(id: number) {
-    await db.delete(id);
-    items = items.filter(i => i.id !== id);
-  }
+	import { onMount } from 'svelte';
+	import { createDbService } from '$lib/db';
+
+	const db = createDbService('mi_tabla');
+	let items = $state([]);
+
+	onMount(async () => {
+		const { data } = await db.getAll();
+		items = data ?? [];
+	});
+
+	async function crear(nombre: string) {
+		const { data } = await db.create({ nombre });
+		if (data) items = [...items, data];
+	}
+
+	async function eliminar(id: number) {
+		await db.delete(id);
+		items = items.filter((i) => i.id !== id);
+	}
 </script>
 
 <ul>
-  {#each items as item}
-    <li>
-      {item.nombre}
-      <button onclick={() => eliminar(item.id)}>❌</button>
-    </li>
-  {/each}
+	{#each items as item}
+		<li>
+			{item.nombre}
+			<button onclick={() => eliminar(item.id)}>❌</button>
+		</li>
+	{/each}
 </ul>
 ```
 
@@ -99,4 +99,3 @@ Ver documentación completa en [`SUPABASE.md`](./SUPABASE.md)
 Ver ejemplos de uso en [`src/lib/examples/`](./src/lib/examples/)
 
 Ver componente de ejemplo en [`src/lib/components/SupabaseExample.svelte`](./src/lib/components/SupabaseExample.svelte)
-
