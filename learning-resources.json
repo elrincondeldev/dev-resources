@@ -1,0 +1,210 @@
+[
+  {
+    "id": "1",
+    "name": "The Odin Project",
+    "description": "Bootcamp completo y gratuito de desarrollo web. Incluye HTML, CSS, JavaScript, React, Node.js y proyectos reales para tu portfolio. Con comunidad activa en Discord.",
+    "url": "https://www.theodinproject.com/",
+    "category": "Full Stack",
+    "isActive": true
+  },
+  {
+    "id": "2",
+    "name": "30 Days Of JavaScript",
+    "description": "Repositorio de GitHub con 30 lecciones diarias de JavaScript. Desde variables y tipos de datos hasta async/await y promesas. Incluye ejercicios y soluciones.",
+    "url": "https://github.com/Asabeneh/30-Days-Of-JavaScript",
+    "category": "Full Stack",
+    "isActive": true
+  },
+  {
+    "id": "3",
+    "name": "30 Days Of Python",
+    "description": "Aprende Python desde cero en 30 días. Cubre desde sintaxis básica hasta web scraping, APIs y análisis de datos. Con ejercicios diarios progresivos.",
+    "url": "https://github.com/Asabeneh/30-Days-Of-Python",
+    "category": "Backend",
+    "isActive": true
+  },
+  {
+    "id": "4",
+    "name": "DevChallenges",
+    "description": "Plataforma con challenges de desarrollo real. Recibe diseños en Figma y conviértelos en sitios web funcionales. Ideal para practicar responsive design y JavaScript.",
+    "url": "https://devchallenges.io/",
+    "category": "Practice",
+    "isActive": true
+  },
+  {
+    "id": "5",
+    "name": "Frontend Mentor",
+    "description": "Recibe diseños profesionales en Figma/Sketch y construye proyectos frontend reales. Con soluciones de la comunidad y feedback de otros developers.",
+    "url": "https://www.frontendmentor.io/",
+    "category": "Practice",
+    "isActive": true
+  },
+  {
+    "id": "6",
+    "name": "Roadmap.sh",
+    "description": "Mapas visuales interactivos mostrando qué aprender para ser Frontend, Backend, DevOps, etc. Con recursos curados para cada tema y seguimiento de progreso.",
+    "url": "https://roadmap.sh/",
+    "category": "Roadmaps",
+    "isActive": true
+  },
+  {
+    "id": "7",
+    "name": "CS50's Web Programming",
+    "description": "Curso universitario de Harvard gratuito. Aprende Django, Flask, SQL, JavaScript, testing y deployment. Con videos de conferencias y proyectos semanales.",
+    "url": "https://harvardonline.harvard.edu/course/cs50s-web-programming-python-javascript",
+    "category": "Full Stack",
+    "isActive": true
+  },
+  {
+    "id": "8",
+    "name": "Learn TypeScript - Codecademy",
+    "description": "Curso interactivo de TypeScript con editor en el navegador. Aprende tipos, interfaces, generics y cómo usar TypeScript con React o Node.js.",
+    "url": "https://www.codecademy.com/enrolled/courses/learn-typescript",
+    "category": "Typescript",
+    "isActive": true
+  },
+  {
+    "id": "9",
+    "name": "freeCodeCamp",
+    "description": "Plataforma con más de 3000 horas de contenido gratuito. Desde HTML básico hasta Machine Learning. Obtén certificaciones gratis completando proyectos.",
+    "url": "https://www.freecodecamp.org/",
+    "category": "Full Stack",
+    "isActive": true
+  },
+  {
+    "id": "10",
+    "name": "Full Stack Open",
+    "description": "Curso universitario de la Universidad de Helsinki. Aprende React, Redux, Node.js, MongoDB, GraphQL y TypeScript construyendo aplicaciones reales.",
+    "url": "https://fullstackopen.com/es/",
+    "category": "Full Stack",
+    "isActive": true
+  },
+  {
+    "id": "11",
+    "name": "Exercism",
+    "description": "Practica programación en más de 50 lenguajes con ejercicios progresivos. Recibe mentoría gratuita de developers experimentados y compara tu solución con otras.",
+    "url": "https://exercism.org/",
+    "category": "Programming",
+    "isActive": true
+  },
+  {
+    "id": "12",
+    "name": "Codewars",
+    "description": "Resuelve 'katas' (desafíos de código) de diferentes niveles. Sube de rango ganando puntos. Ve soluciones de otros usuarios después de resolver cada kata.",
+    "url": "https://www.codewars.com/",
+    "category": "Logic",
+    "isActive": true
+  },
+  {
+    "id": "13",
+    "name": "LeetCode",
+    "description": "La plataforma #1 para preparación de entrevistas técnicas. Más de 2000 problemas de algoritmos y estructuras de datos con soluciones y discusiones.",
+    "url": "https://leetcode.com/",
+    "category": "Logic",
+    "isActive": true
+  },
+  {
+    "id": "14",
+    "name": "Learn Git Branching",
+    "description": "Tutorial interactivo y visual de Git. Aprende branches, merge, rebase, cherry-pick jugando en un sandbox. Disponible en español.",
+    "url": "https://learngitbranching.js.org/?locale=es_ES",
+    "category": "Git",
+    "isActive": true
+  },
+  {
+    "id": "15",
+    "name": "Flexbox Froggy",
+    "description": "Juego donde ayudas a ranas a llegar a sus hojas usando CSS Flexbox. Aprende justify-content, align-items, flex-direction de forma interactiva.",
+    "url": "https://flexboxfroggy.com/#es",
+    "category": "CSS",
+    "isActive": true
+  },
+  {
+    "id": "16",
+    "name": "CSS Grid Garden",
+    "description": "Riega tu jardín usando CSS Grid. Aprende grid-template-columns, grid-areas y todas las propiedades de Grid jugando. En español.",
+    "url": "https://cssgridgarden.com/#es",
+    "category": "CSS",
+    "isActive": true
+  },
+  {
+    "id": "17",
+    "name": "OSSU Computer Science",
+    "description": "Plan de estudios completo de Ciencias de la Computación usando recursos de MIT, Harvard y otras universidades. Cubre algoritmos, sistemas, redes y más.",
+    "url": "https://github.com/ossu/computer-science",
+    "category": "Computer Science",
+    "isActive": true
+  },
+  {
+    "id": "18",
+    "name": "Refactoring Guru",
+    "description": "Guía visual de patrones de diseño (Singleton, Factory, Observer, etc.) y técnicas de refactoring. Con ejemplos en múltiples lenguajes y diagramas claros.",
+    "url": "https://refactoring.guru/es",
+    "category": "Design Patterns",
+    "isActive": true
+  },
+  {
+    "id": "19",
+    "name": "Eloquent JavaScript",
+    "description": "Libro gratuito que enseña JavaScript y conceptos de programación fundamentales. Incluye ejercicios interactivos en el navegador y cubre desde lo básico hasta Node.js.",
+    "url": "https://eloquentjavascript.net/",
+    "category": "JavaScript",
+    "isActive": true
+  },
+  {
+    "id": "20",
+    "name": "You Don't Know JS",
+    "description": "Serie de 6 libros gratuitos que profundizan en JavaScript. Explica closures, this, prototypes, async/await y cómo funciona JavaScript internamente.",
+    "url": "https://github.com/getify/You-Dont-Know-JS",
+    "category": "JavaScript",
+    "isActive": true
+  },
+  {
+    "id": "21",
+    "name": "SQL Bolt",
+    "description": "Tutorial interactivo de SQL con ejercicios en el navegador. Aprende SELECT, JOIN, GROUP BY, subqueries y optimización de queries paso a paso.",
+    "url": "https://sqlbolt.com/",
+    "category": "SQL",
+    "isActive": true
+  },
+  {
+    "id": "22",
+    "name": "System Design Primer",
+    "description": "Guía completa de diseño de sistemas. Aprende escalabilidad, load balancing, caching, microservicios y bases de datos distribuidas. Con diagramas y ejemplos reales.",
+    "url": "https://github.com/donnemartin/system-design-primer",
+    "category": "System Design",
+    "isActive": true
+  },
+  {
+    "id": "23",
+    "name": "Build Your Own X",
+    "description": "Colección de tutoriales para construir desde cero: tu propio Git, Docker, React, base de datos, compilador. Aprende cómo funcionan las tecnologías por dentro.",
+    "url": "https://github.com/codecrafters-io/build-your-own-x",
+    "category": "Full Stack",
+    "isActive": true
+  },
+  {
+    "id": "24",
+    "name": "Free Programming Books",
+    "description": "Biblioteca con miles de libros de programación gratuitos y legales. Disponibles en PDF y online. Cubre todos los lenguajes y tecnologías populares.",
+    "url": "https://books.goalkicker.com/",
+    "category": "Books",
+    "isActive": true
+  },
+  {
+    "id": "25",
+    "name": "Good First Issue",
+    "description": "Encuentra tu primer issue en proyectos open source. Filtra por lenguaje (JavaScript, Python, etc.) y encuentra issues etiquetados como 'good first issue'.",
+    "url": "https://goodfirstissue.dev/",
+    "category": "Practice",
+    "isActive": true
+  },
+  {
+    "id": "26",
+    "name": "Learn Express - Codecademy",
+    "description": "Curso interactivo de Express.js. Aprende a crear APIs RESTful, middlewares, routing y conectar con bases de datos. Con ejercicios en el navegador.",
+    "url": "https://www.codecademy.com/learn/learn-express",
+    "category": "Backend",
+    "isActive": true
+  }
+]

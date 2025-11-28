@@ -7,5 +7,9 @@ export { supabase } from './supabase';
 export { createDbService, DbService } from './db';
 export type { DbResult, QueryOptions } from './db';
 
+// Exportar tipos de base de datos
+export type { Resource, CreateResource, UpdateResource } from './types/database.types';
+
 // Exportar servicios predefinidos
 export * from './services';
+export * from './services/resources';
