@@ -13,7 +13,7 @@ export interface QueryOptions {
 	offset?: number;
 }
 
-export class DbService<T extends Record<string, any>> {
+export class DbService<T extends Record<string, unknown>> {
 	constructor(private tableName: string) {}
 
 	async getAll(options?: QueryOptions): Promise<DbResult<T[]>> {
@@ -64,11 +64,14 @@ export class DbService<T extends Record<string, any>> {
 		return { data: data as T[] | null, error };
 	}
 
-	async getByCategory(category: string): Promise<DbResult<T[]>> {
-		const { data, error } = await supabase
-			.from(this.tableName)
-			.select('*')
-			.contains('category', [category]);
+	async getByCategory(category: string, activeOnly = true): Promise<DbResult<T[]>> {
+		let query = supabase.from(this.tableName).select('*').contains('category', [category]);
+
+		if (activeOnly) {
+			query = query.eq('isActive', true);
+		}
+
+		const { data, error } = await query;
 
 		return { data: data as T[] | null, error };
 	}
@@ -149,6 +152,6 @@ export class DbService<T extends Record<string, any>> {
 	}
 }
 
-export function createDbService<T extends Record<string, any>>(tableName: string) {
+export function createDbService<T extends Record<string, unknown>>(tableName: string) {
 	return new DbService<T>(tableName);
 }

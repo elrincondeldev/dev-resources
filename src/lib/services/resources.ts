@@ -1,19 +1,19 @@
-import { createDbService } from '$lib/db';
+import { createDbService, type QueryOptions } from '$lib/db';
 import type { Resource } from '$lib/types/database.types';
 
-const resourcesService = createDbService<Resource>('resources');
+const resourcesService = createDbService<Omit<Resource, 'id' | 'created_at' | 'updated_at'>>('resources');
 
 export const resourcesApi = {
-	getAll: (options?: any) => resourcesService.getAll(options),
+	getAll: (options?: QueryOptions) => resourcesService.getAll(options),
 	getById: (id: string) => resourcesService.getById(id),
-	getWhere: (filters: any, options?: any) => resourcesService.getWhere(filters, options),
-	create: (item: any) => resourcesService.create(item),
-	createMany: (items: any[]) => resourcesService.createMany(items),
-	update: (id: string, updates: any) => resourcesService.update(id, updates),
-	updateWhere: (filters: any, updates: any) => resourcesService.updateWhere(filters, updates),
+	getWhere: (filters: Partial<Resource>, options?: QueryOptions) => resourcesService.getWhere(filters, options),
+	create: (item: Omit<Resource, 'id' | 'created_at' | 'updated_at'>) => resourcesService.create(item),
+	createMany: (items: Omit<Resource, 'id' | 'created_at' | 'updated_at'>[]) => resourcesService.createMany(items),
+	update: (id: string, updates: Partial<Resource>) => resourcesService.update(id, updates),
+	updateWhere: (filters: Partial<Resource>, updates: Partial<Resource>) => resourcesService.updateWhere(filters, updates),
 	delete: (id: string) => resourcesService.delete(id),
-	deleteWhere: (filters: any) => resourcesService.deleteWhere(filters),
-	count: (filters?: any) => resourcesService.count(filters),
+	deleteWhere: (filters: Partial<Resource>) => resourcesService.deleteWhere(filters),
+	count: (filters?: Partial<Resource>) => resourcesService.count(filters),
 
 	async getActive() {
 		return await resourcesService.getWhere(
@@ -38,7 +38,7 @@ export const resourcesApi = {
 	},
 
 	async getByCategory(category: string, activeOnly = true) {
-		return await resourcesService.getByCategory(category);
+		return await resourcesService.getByCategory(category, activeOnly);
 	}
 };
 
