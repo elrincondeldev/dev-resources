@@ -102,11 +102,13 @@
 		onclick={handleClose}
 		role="presentation"
 	>
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div
 			class="bg-background border rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom duration-300"
 			onclick={(e) => e.stopPropagation()}
 			role="dialog"
 			aria-labelledby="modal-title"
+			tabindex="-1"
 		>
 			<div class="sticky top-0 bg-background border-b px-6 py-4 flex items-center justify-between">
 				<div>
