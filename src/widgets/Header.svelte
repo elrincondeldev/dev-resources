@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { Button } from '$lib/components/ui/button';
 	import ProposeResourceModal from '$lib/components/ProposeResourceModal.svelte';
+	import AuroraText from '$lib/components/ui/aurora-text.svelte';
 
 	const GITHUB_REPO = 'elrincondeldev/dev-resources';
 	let starCount = $state<number | null>(null);
@@ -25,31 +26,27 @@
 	class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
 >
 	<div class="container mx-auto flex h-16 items-center justify-between px-4 max-w-7xl">
-		<!-- Logo / Título -->
 		<div class="flex items-center gap-2">
 			<a href="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-				<span
-					class="text-2xl font-bold bg-linear-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent"
+				<AuroraText
+					colors={['#FF0080', '#7928CA', '#0070F3', '#38bdf8']}
+					class="text-2xl font-bold"
 				>
 					El Rincón Del Dev
-				</span>
+				</AuroraText>
 			</a>
 		</div>
 
-		<!-- Navegación y GitHub Star -->
 		<nav class="flex items-center gap-3">
-			<!-- Proponer Recurso Button -->
 			<Button onclick={() => (showProposeModal = true)} size="sm" class="hidden sm:flex gap-2">
 				<Plus class="h-4 w-4" />
 				Proponer recurso
 			</Button>
 
-			<!-- Mobile: Solo icono -->
 			<Button onclick={() => (showProposeModal = true)} size="icon" class="sm:hidden">
 				<Plus class="h-4 w-4" />
 			</Button>
 
-			<!-- GitHub Star Button -->
 			<a
 				href="https://github.com/{GITHUB_REPO}"
 				target="_blank"
@@ -71,5 +68,4 @@
 	</div>
 </header>
 
-<!-- Modal para proponer recursos -->
 <ProposeResourceModal bind:show={showProposeModal} onClose={() => (showProposeModal = false)} />

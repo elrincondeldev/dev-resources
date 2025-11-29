@@ -27,7 +27,7 @@
 	<div class="container mx-auto px-4 max-w-7xl py-8">
 		<!-- Hero Section -->
 		<div class="text-center mb-8">
-			<h1 class="text-3xl md:text-4xl font-bold mb-2">Recursos curados para desarrolladores</h1>
+			<h1 class="text-3xl md:text-4xl font-bold mb-2">Recursos para aprender a programar</h1>
 			<p class="text-muted-foreground text-sm md:text-base">
 				Aprende, practica y mejora tus habilidades de programación
 			</p>
