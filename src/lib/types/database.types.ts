@@ -6,6 +6,7 @@ export interface Resource {
 	category: string[];
 	created_at: string;
 	isActive: boolean;
+	ip_address?: string;
 }
 
 export type CreateResource = Omit<Resource, 'id' | 'created_at'>;

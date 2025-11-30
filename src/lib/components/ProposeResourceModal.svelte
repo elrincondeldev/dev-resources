@@ -7,6 +7,7 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import { X, Check, AlertCircle, Loader2, Plus } from 'lucide-svelte';
 	import { resourcesApi } from '$lib/services/resources';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		show: boolean;
@@ -43,6 +44,32 @@
 	let loading = $state(false);
 	let success = $state(false);
 	let error = $state<string | null>(null);
+	let canPropose = $state(true);
+	let remainingProposals = $state(5);
+	let checkingLimit = $state(false);
+
+	onMount(() => {
+		checkProposalLimit();
+	});
+
+	async function checkProposalLimit() {
+		checkingLimit = true;
+		try {
+			const response = await fetch('/api/check-proposal-limit');
+			const data = await response.json();
+
+			console.log(data);
+
+			if (response.ok) {
+				canPropose = data.canPropose;
+				remainingProposals = data.remainingProposals;
+			}
+		} catch (err) {
+			console.error('Error checking proposal limit:', err);
+		} finally {
+			checkingLimit = false;
+		}
+	}
 
 	function toggleCategory(cat: string) {
 		if (formData.category.includes(cat)) {
@@ -64,16 +91,32 @@
 			return;
 		}
 
+		if (!canPropose) {
+			error = 'Has alcanzado el límite de 5 propuestas. Por favor espera a que sean revisadas.';
+			loading = false;
+			return;
+		}
+
 		try {
-			const result = await resourcesApi.create({
-				...formData,
-				isActive: false
+			const response = await fetch('/api/propose-resource', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(formData)
 			});
 
-			if (result.error) throw new Error(result.error.message);
+			const result = await response.json();
+
+			if (!response.ok) {
+				throw new Error(result.error || 'Error al enviar el recurso');
+			}
 
 			success = true;
 			formData = { name: '', description: '', url: '', category: [] };
+
+			// Actualizar el límite de propuestas
+			await checkProposalLimit();
 
 			setTimeout(() => {
 				onClose();
@@ -126,6 +169,26 @@
 			</div>
 
 			<div class="p-6">
+				{#if !canPropose}
+					<Alert.Root variant="destructive" class="mb-4">
+						<AlertCircle class="h-4 w-4" />
+						<Alert.Title>Límite alcanzado</Alert.Title>
+						<Alert.Description>
+							Has alcanzado el límite de 5 propuestas. Por favor espera a que tus propuestas sean
+							revisadas antes de enviar más recursos.
+						</Alert.Description>
+					</Alert.Root>
+				{:else if remainingProposals <= 2 && remainingProposals > 0}
+					<Alert.Root class="mb-4 border-yellow-200 bg-yellow-50 text-yellow-900">
+						<AlertCircle class="h-4 w-4 text-yellow-600" />
+						<Alert.Title>Advertencia</Alert.Title>
+						<Alert.Description>
+							Te quedan {remainingProposals}
+							{remainingProposals === 1 ? 'propuesta' : 'propuestas'} disponibles.
+						</Alert.Description>
+					</Alert.Root>
+				{/if}
+
 				{#if error}
 					<Alert.Root variant="destructive" class="mb-4">
 						<AlertCircle class="h-4 w-4" />
@@ -205,10 +268,16 @@
 					</div>
 
 					<div class="flex gap-3 pt-4">
-						<Button type="submit" class="flex-1" disabled={loading}>
+						<Button type="submit" class="flex-1" disabled={loading || !canPropose || checkingLimit}>
 							{#if loading}
 								<Loader2 class="mr-2 h-4 w-4 animate-spin" />
 								Enviando...
+							{:else if checkingLimit}
+								<Loader2 class="mr-2 h-4 w-4 animate-spin" />
+								Verificando...
+							{:else if !canPropose}
+								<AlertCircle class="mr-2 h-4 w-4" />
+								Límite alcanzado
 							{:else}
 								<Check class="mr-2 h-4 w-4" />
 								Proponer Recurso

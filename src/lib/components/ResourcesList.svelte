@@ -39,7 +39,7 @@
 				throw new Error(result.error.message);
 			}
 
-			resources = limit ? (result.data ?? []).slice(0, limit) : (result.data ?? []);
+			resources = (result.data ?? []).slice(0, limit ?? undefined) as Resource[];
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Error cargando recursos';
 		} finally {
