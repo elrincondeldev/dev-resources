@@ -8,6 +8,10 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
 	try {
 		const clientIP = getClientAddress();
 
+        if (!clientIP) {
+            return json({ error: 'No se pudo obtener la dirección IP del cliente' }, { status: 400 });
+        }
+
 		const { count, error: countError } = await supabase
 			.from('resources')
 			.select('*', { count: 'exact', head: true })
